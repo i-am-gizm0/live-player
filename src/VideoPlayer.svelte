@@ -3,16 +3,18 @@
 <script lang="ts">
   import Hls from "hls.js";
   import { onMount } from "svelte";
-  import { fade, scale, slide } from "svelte/transition";
+  import { fade, scale } from "svelte/transition";
   import PlaybackControls from "./PlaybackControls.svelte";
   import MediaQuery from "svelte-media-queries";
   import Seekbar from "./Seekbar.svelte";
-  import { formatBehindTime } from "./seekbar";
+  import type { Program } from "./api";
   // import hotkeys from 'hotkeys-js';
 
   export let src: string;
-  export let poster: string;
   export let channelname: string;
+  export let program: Program;
+
+  $: poster = program.img.synopsis;
 
   let video: HTMLVideoElement;
   let player: HTMLElement;
@@ -120,6 +122,7 @@
     }
   }
 
+  const playerLoadDate = new Date();
   let duration = 0;
   let currentTime = 0;
   $: behind = duration - currentTime < 15 ? 0 : duration - currentTime;
@@ -245,7 +248,12 @@
         {/if}
         <div class="bottom">
           <span class="channel">{channelname}</span>
-          <Seekbar {duration} {behind} />
+          <Seekbar
+            mediaDuration={duration}
+            {behind}
+            programTiming={program}
+            initialStart={playerLoadDate}
+          />
           <div
             class="bottom-controls"
             on:pointerover={mouseOver}

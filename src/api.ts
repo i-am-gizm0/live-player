@@ -1,10 +1,15 @@
-export type Program = {
-  start: Date;
-  lengthMs: number;
+export type Program = ProgramTiming & {
   programName: string;
   episodeName: string;
-  imgSynopsis: string;
+  img: {
+    synopsis: string;
+    hero: string;
+  };
   airing: "NEW" | "LIVE" | "";
-  imgHero: string;
   gameId: string;
+};
+
+export type ProgramTiming = {
+  start: Date;
+  lengthMs: number;
 };
